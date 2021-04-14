@@ -26,6 +26,7 @@ struct VestingType {
 contract ShieldToken is OwnableUpgradeable, ERC20PausableUpgradeable {
     mapping (address => FrozenWallet) public frozenWallets;
     VestingType[] public vestingTypes;
+    mapping (address => VestingType) public vestingWallets;
 
     function initialize() initializer public {
         __Ownable_init();
@@ -34,6 +35,10 @@ contract ShieldToken is OwnableUpgradeable, ERC20PausableUpgradeable {
 
 	    // Mint All TotalSuply in the Account OwnerShip
         _mint(owner(), getMaxTotalSupply());
+        addVestingAddresses();
+    }
+
+    function addVestingAddresses() public {
 
         vestingTypes.push(VestingType(1660000000000000000, 0, 30 days, 0, true)); // 30 Days 1.66 Percent
         vestingTypes.push(VestingType(1660000000000000000, 0, 180 days, 0, true)); // 180 Days 1.66 Percent
@@ -44,6 +49,23 @@ contract ShieldToken is OwnableUpgradeable, ERC20PausableUpgradeable {
         vestingTypes.push(VestingType(15000000000000000000, 10000000000000000000, 0, 1, true)); // 0 Days 10 initial 15 monthly Percent
         vestingTypes.push(VestingType(25000000000000000000, 25000000000000000000, 0, 1, true)); // 0 Days 25 initial 25 monthly Percent
     }
+
+    function addVestingAddresses_simple() public {
+
+        vestingTypes.push(VestingType(1660000000000000000, 0, 30 days, 0, true)); // 30 Days 1.66 Percent
+
+    }
+
+    function addVestingAddresses_array() public {
+
+        uint vestingLength = vestingWallets.length;
+
+        for(uint i = 0; i < vestingLength; i++) {
+            vestingTypes.push(vestingWallets[i]); // 30 Days 1.66 Percent
+        }
+    }
+
+
 
     function getReleaseTime() public pure returns (uint256) {
         // FIXME
